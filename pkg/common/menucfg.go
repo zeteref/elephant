@@ -294,7 +294,8 @@ func (m *Menu) CreateLuaEntries(query string) {
 	state.Pop(1)
 
 	if table, ok := ret.(*lua.LTable); ok {
-		table.ForEach(func(key, value lua.LValue) {
+		for i := 1; i <= table.MaxN(); i++ {
+			value := table.RawGetInt(i)
 			if item, ok := value.(*lua.LTable); ok {
 				entry := Entry{}
 
@@ -368,7 +369,7 @@ func (m *Menu) CreateLuaEntries(query string) {
 
 				res = append(res, entry)
 			}
-		})
+		}
 	}
 
 	m.Entries = res

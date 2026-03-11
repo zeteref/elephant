@@ -9,13 +9,17 @@ BUILD_DIR = cmd/elephant
 
 .PHONY: all build install uninstall clean
 
-all: build
+all: build plugins
+
+plugins:
+	@find internal/providers -name makefile -execdir $(MAKE) build \;
 
 build:
 	cd $(BUILD_DIR) && go build $(GO_BUILD_FLAGS) -o elephant
 
 install: build
-	install -Dm 755 $(BUILD_DIR)/elephant $(BINDIR)/elephant
+	install -Dm 755 $(BUILD_DIR)/elephant ~/.local/bin/elephant
+	cp internal/providers/*/*.so ~/.config/elephant/providers/
 
 uninstall:
 	rm -f $(BINDIR)/elephant
